@@ -15,6 +15,10 @@ interface ZakatState {
   setBusinessStartDate: (date: string | null) => void;
   setAssetValue: (key: keyof AssetData, value: number) => void;
   setImpureIncome: (value: number) => void;
+  currency: string;
+  goldPrice: number;
+  setCurrency: (currency: string) => void;
+  setGoldPrice: (price: number) => void;
 }
 
 export const useZakatStore = create<ZakatState>()(
@@ -28,12 +32,16 @@ export const useZakatStore = create<ZakatState>()(
         fixedAssets: 0,
       },
       impureIncome: 0,
+      currency: 'USD',
+      goldPrice: 65, // Default USD price per gram
       setBusinessStartDate: (date) => set({ businessStartDate: date }),
       setAssetValue: (key, value) =>
         set((state) => ({
           assets: { ...state.assets, [key]: value },
         })),
       setImpureIncome: (value) => set({ impureIncome: value }),
+      setCurrency: (currency) => set({ currency }),
+      setGoldPrice: (price) => set({ goldPrice: price }),
     }),
     {
       name: 'zakat-storage',

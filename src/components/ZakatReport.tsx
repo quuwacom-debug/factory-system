@@ -5,17 +5,19 @@ import React from 'react';
 import { useZakatStore } from '@/store/useZakatStore';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { Download } from 'lucide-react';
+import { getCurrencySymbol } from './CurrencySwitcher';
 
 const COLORS = ['#10b981', '#94a3b8']; // Emerald-500, Slate-400
 
 export function ZakatReport() {
-    const { assets, impureIncome } = useZakatStore();
+    const { assets, impureIncome, currency, goldPrice } = useZakatStore();
+    const symbol = getCurrencySymbol(currency);
 
     const zakatableTotal = assets.cash + assets.inventory + assets.receivables;
     const exemptTotal = assets.fixedAssets;
     const totalAssets = zakatableTotal + exemptTotal;
 
-    const NISAB_VALUE = 85 * 65; // $5525
+    const NISAB_VALUE = 85 * goldPrice;
     const isLiable = zakatableTotal >= NISAB_VALUE;
 
     const zakatPayable = isLiable ? zakatableTotal * 0.025 : 0;
@@ -64,7 +66,7 @@ export function ZakatReport() {
                                 ))}
                             </Pie>
                             <Tooltip
-                                formatter={(value: any) => [`$${Number(value).toLocaleString()}`]}
+                                formatter={(value: any) => [`${symbol}${Number(value).toLocaleString()}`]}
                                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                             />
                             <Legend verticalAlign="bottom" height={36} />
@@ -73,7 +75,7 @@ export function ZakatReport() {
                     {/* Center Label */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none mt-[-10px]">
                         <div className="text-xs text-slate-400">Total Assets</div>
-                        <div className="font-bold text-slate-700">${totalAssets.toLocaleString()}</div>
+                        <div className="font-bold text-slate-700">{symbol}{totalAssets.toLocaleString()}</div>
                     </div>
                 </div>
 
@@ -82,7 +84,7 @@ export function ZakatReport() {
                     <div className="space-y-3">
                         <div className="flex justify-between border-b border-slate-100 pb-2">
                             <span className="text-slate-600">Total Zakatable Wealth</span>
-                            <span className="font-medium text-emerald-700">${zakatableTotal.toLocaleString()}</span>
+                            <span className="font-medium text-emerald-700">{symbol}{zakatableTotal.toLocaleString()}</span>
                         </div>
                         <div className="flex justify-between border-b border-slate-100 pb-2">
                             <span className="text-slate-600">Zakat Rate</span>
@@ -90,22 +92,29 @@ export function ZakatReport() {
                         </div>
                         <div className="flex justify-between border-b border-slate-100 pb-2">
                             <span className="text-slate-600">Zakat Status</span>
-                            <span className={`font-bold ${isLiable ? 'text-emerald-600' : 'text-slate-400'}`}>
-                                {isLiable ? 'LIABLE' : 'BELOW THRESHOLD'}
-                            </span>
+                            <div className="text-right">
+                                <span className={`font-bold block ${isLiable ? 'text-emerald-600' : 'text-slate-400'}`}>
+                                    {isLiable ? 'LIABLE' : 'BELOW THRESHOLD'}
+                                </span>
+                                {!isLiable && (
+                                    <span className="text-xs text-slate-400">
+                                        Min. Required: {symbol}{NISAB_VALUE.toLocaleString()}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
 
                     <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
                         <div className="text-sm text-emerald-800 mb-1">Total Zakat Due</div>
                         <div className="text-3xl font-bold text-emerald-900">
-                            ${zakatPayable.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            {symbol}{zakatPayable.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
                     </div>
 
                     {impureIncome > 0 && (
                         <div className="text-xs text-center text-red-500 bg-red-50 p-2 rounded">
-                            + ${impureIncome.toLocaleString()} to be distributed separately (Purification)
+                            + {symbol}{impureIncome.toLocaleString()} to be distributed separately (Purification)
                         </div>
                     )}
                 </div>

@@ -1,15 +1,15 @@
 
-import React from 'react';
-import { Coins, AlertCircle, CheckCircle } from 'lucide-react';
+import { Coins, AlertCircle, CheckCircle, Edit2 } from 'lucide-react';
 import { useZakatStore } from '@/store/useZakatStore';
+import { getCurrencySymbol } from './CurrencySwitcher';
 
-// CONSTANTS
-const GOLD_PRICE_PER_GRAM = 65;
 const NISAB_THRESHOLD_GRAMS = 85;
-const NISAB_VALUE = GOLD_PRICE_PER_GRAM * NISAB_THRESHOLD_GRAMS; // $5525
 
 export function NisabStatus() {
-    const assets = useZakatStore((state) => state.assets);
+    const { assets, currency, goldPrice, setGoldPrice } = useZakatStore();
+
+    const NISAB_VALUE = goldPrice * NISAB_THRESHOLD_GRAMS;
+    const symbol = getCurrencySymbol(currency);
 
     // Zakatable Ratio: Cash + Inventory + Receivables (Fixed Assets are exempt)
     const netZakatableWealth = assets.cash + assets.inventory + assets.receivables;
@@ -42,19 +42,32 @@ export function NisabStatus() {
 
             <div className="space-y-4">
                 <div className="flex justify-between items-center py-2 border-b border-slate-100">
-                    <span className="text-slate-600">Current Gold Price</span>
-                    <span className="font-mono font-medium">${GOLD_PRICE_PER_GRAM}/g</span>
+                    <span className="text-slate-600 flex items-center gap-1">
+                        Gold Price <span className="text-xs text-slate-400">/gram</span>
+                    </span>
+                    <div className="flex items-center gap-1">
+                        <span className="text-slate-400 text-sm">{symbol}</span>
+                        <input
+                            type="number"
+                            min="0"
+                            className="w-20 text-right font-mono font-medium border-b border-dashed border-slate-300 focus:border-emerald-500 outline-none"
+                            value={goldPrice}
+                            onChange={(e) => setGoldPrice(parseFloat(e.target.value) || 0)}
+                        />
+                    </div>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-slate-100">
                     <span className="text-slate-600">Nisab Value (85g)</span>
-                    <span className="font-mono font-bold text-amber-600">${NISAB_VALUE.toLocaleString()}</span>
+                    <span className="font-mono font-bold text-amber-600">
+                        {symbol}{NISAB_VALUE.toLocaleString()}
+                    </span>
                 </div>
 
                 <div className="mt-4 pt-2">
                     <div className="flex justify-between text-sm mb-1">
                         <span>Net Wealth</span>
                         <span className={isLiable ? "text-emerald-600 font-bold" : "text-slate-500"}>
-                            ${netZakatableWealth.toLocaleString()}
+                            {symbol}{netZakatableWealth.toLocaleString()}
                         </span>
                     </div>
                     {/* Progress bar to Nisab */}
@@ -66,7 +79,7 @@ export function NisabStatus() {
                     </div>
                     {!isLiable && (
                         <p className="text-xs text-slate-400 mt-1 text-right">
-                            ${(NISAB_VALUE - netZakatableWealth).toLocaleString()} more needed
+                            {symbol}{(NISAB_VALUE - netZakatableWealth).toLocaleString()} more needed
                         </p>
                     )}
                 </div>

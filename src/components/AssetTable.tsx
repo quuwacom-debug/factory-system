@@ -2,9 +2,12 @@
 import React from 'react';
 import { TrendingUp, Archive, CreditCard, Building2, Calculator } from 'lucide-react';
 import { useZakatStore, AssetData } from '@/store/useZakatStore';
+import { getCurrencySymbol } from './CurrencySwitcher';
 
 export function AssetTable() {
-    const { assets, setAssetValue } = useZakatStore();
+    const { assets, setAssetValue, currency } = useZakatStore();
+
+    const symbol = getCurrencySymbol(currency);
 
     const handleInputChange = (key: keyof AssetData, value: string) => {
         const numValue = Math.max(0, parseFloat(value) || 0);
@@ -30,7 +33,7 @@ export function AssetTable() {
                     <thead className="bg-slate-50 text-slate-500 text-xs uppercase font-medium">
                         <tr>
                             <th className="px-4 py-3 text-left">Asset Type</th>
-                            <th className="px-4 py-3 text-right">Value ($)</th>
+                            <th className="px-4 py-3 text-right">Value ({symbol})</th>
                             <th className="px-4 py-3 text-center">Status</th>
                         </tr>
                     </thead>
@@ -147,7 +150,7 @@ export function AssetTable() {
                         <tr>
                             <td colSpan={2} className="px-4 py-3 text-right font-medium text-emerald-800">Net Zakatable Wealth</td>
                             <td className="px-4 py-3 text-right font-bold text-emerald-900 font-mono">
-                                ${zakatableTotal.toLocaleString()}
+                                {symbol}{zakatableTotal.toLocaleString()}
                             </td>
                         </tr>
                     </tfoot>

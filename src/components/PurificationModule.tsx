@@ -2,9 +2,11 @@
 import React from 'react';
 import { Flame } from 'lucide-react';
 import { useZakatStore } from '@/store/useZakatStore';
+import { getCurrencySymbol } from './CurrencySwitcher';
 
 export function PurificationModule() {
-    const { impureIncome, setImpureIncome } = useZakatStore();
+    const { impureIncome, setImpureIncome, currency } = useZakatStore();
+    const symbol = getCurrencySymbol(currency);
 
     return (
         <div className="bg-white rounded-xl shadow-md p-6 border border-red-100">
@@ -23,7 +25,7 @@ export function PurificationModule() {
                 <div>
                     <label className="block text-xs font-medium text-slate-600 mb-1">Impure Income Amount</label>
                     <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">{symbol}</span>
                         <input
                             type="number"
                             min="0"
@@ -39,7 +41,7 @@ export function PurificationModule() {
                     <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-800 flex items-start gap-2 animate-in fade-in slide-in-from-top-1">
                         <Flame className="w-4 h-4 shrink-0 mt-0.5" />
                         <div>
-                            <span className="font-bold">Action Required:</span> Donate ${impureIncome.toLocaleString()} to charity immediately. This does not count as Zakat.
+                            <span className="font-bold">Action Required:</span> Donate {symbol}{impureIncome.toLocaleString()} to charity immediately. This does not count as Zakat.
                         </div>
                     </div>
                 )}

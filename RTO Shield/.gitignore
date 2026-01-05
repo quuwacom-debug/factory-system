@@ -1,0 +1,10 @@
+rto-shield/
+node_modules/
+vendor/
+.DS_Store
+Thumbs.db
+*.log
+.env
+.vscode/
+.idea/
+*.zip

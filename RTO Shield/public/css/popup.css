@@ -1,0 +1,124 @@
+/* RTO Shield Popup Styles */
+
+#rto-shield-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+#rto-shield-popup-overlay.active {
+    display: flex;
+}
+
+.rto-shield-popup {
+    background: #fff;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: relative;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.rto-shield-popup h2 {
+    font-size: 24px;
+    margin: 0 0 20px 0;
+    color: #333;
+}
+
+.rto-shield-popup .offer-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.rto-shield-popup .benefits {
+    text-align: left;
+    margin: 20px 0;
+}
+
+.rto-shield-popup .benefit-item {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.rto-shield-popup .benefit-item::before {
+    content: "✅";
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.rto-shield-popup .savings {
+    background: #f0f9ff;
+    border: 2px solid #0891b2;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0891b2;
+}
+
+.rto-shield-popup .timer {
+    font-size: 32px;
+    font-weight: bold;
+    color: #dc2626;
+    margin: 20px 0;
+}
+
+.rto-shield-popup .timer-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.rto-shield-popup .cta-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border: none;
+    padding: 18px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    margin: 20px 0 10px 0;
+    transition: transform 0.2s;
+}
+
+.rto-shield-popup .cta-button:hover {
+    transform: scale(1.05);
+}
+
+.rto-shield-popup .decline-link {
+    color: #999;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.rto-shield-popup .decline-link:hover {
+    text-decoration: underline;
+}
